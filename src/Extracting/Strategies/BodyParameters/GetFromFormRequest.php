@@ -77,6 +77,11 @@ class GetFromFormRequest extends Strategy
     }
 
     /**
+     * @note Override calling 'LaravelFormRequest::rules`, so that
+     * Laravel handles parameter injection. The docs explicitly
+     * state this should work.
+     * @see https://laravel.com/docs/8.x/validation#creating-form-requests
+     *
      * @param LaravelFormRequest|DingoFormRequest $formRequest
      *
      * @return mixed
@@ -89,7 +94,7 @@ class GetFromFormRequest extends Strategy
             return call_user_func_array([$formRequest, 'validator'], [$validationFactory])
                 ->getRules();
         } else {
-            return call_user_func_array([$formRequest, 'rules'], []);
+            return app()->call([$formRequest, 'rules']);
         }
     }
 
